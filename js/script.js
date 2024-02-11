@@ -8,6 +8,8 @@ let filter = document.querySelector('#filter_task');
 //define evenlistner:
 form.addEventListener('submit',AddTask);
 TaskList.addEventListener('click', removeTask);
+ClearBtn.addEventListener('click', clearBtn);
+filter.addEventListener('keyup', filterTask);
 
 //define Function: 
 
@@ -25,6 +27,9 @@ function AddTask(e){
         link.innerHTML = 'x';
         li.appendChild(link);
         TaskList.appendChild(li);
+
+        storeTaskInLocalStorage(newTask.value);
+
         newTask.value = '';
     }
     e.preventDefault();
@@ -39,4 +44,43 @@ function removeTask(e){
             ele.remove();
         }
     }
+}
+
+//Clear tasks:
+function clearBtn(e){
+    if(confirm("are you sure to clear all tasks?")){
+        TaskList.innerHTML = '';
+    }
+
+}
+
+
+//Filter Task:
+function filterTask(e){
+    let text = e.target.value.toLowerCase();
+
+    document.querySelectorAll('li').forEach((task)=>{
+        let item = task.firstChild.textContent;
+        if(item.toLowerCase().indexOf(text) != -1){
+            task.style.display = 'block';
+        }
+        else{
+            task.style.display = 'none';
+        }
+    })
+}
+
+
+//store in Local storage:
+function storeTaskInLocalStorage(task){
+    let tasks;
+    if (localStorage.getItem('tasks' === null)){
+        tasks = [];
+    }
+    else{
+        tasks = JSON.parse(localStorage.getItem('tasks'));
+    }
+    tasks.push(task);
+
+    localStorage.setItem('tasks',JSON.stringify('tasks'));
 }
